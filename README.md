@@ -28,6 +28,13 @@ O sistema roda no terminal e oferece funcionalidades básicas de um banco, como:
 - Exibe todas as movimentações realizadas (depósitos e saques)  
 - Mostra o saldo atual
 
+✅ *Criar Usuário*  
+- Crie um usuário (Feature Recente)
+- Mostra quem está cadastrado.
+- Possibilita armazenamento de informações
+   
+✅ Nova Feature em breve...
+
 ✅ *Saída*  
 - Encerra o programa de forma limpa
 
