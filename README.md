@@ -8,6 +8,7 @@ O sistema roda no terminal e oferece funcionalidades básicas de um banco, como:
 - Extrato bancário
 - Limite de saque diário
 - Controle de saldo
+- Cadastro de usuários
 
 ---
 
