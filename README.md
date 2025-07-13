@@ -9,8 +9,8 @@ O sistema roda no terminal e oferece funcionalidades básicas de um banco, como:
 - Limite de saque diário
 - Controle de saldo
 - Cadastro de usuários
-- Em breve...
-
+- Permanência de dados
+- interface (em breve)
 ---
 
 ## 💡 Funcionalidades
@@ -39,6 +39,11 @@ O sistema roda no terminal e oferece funcionalidades básicas de um banco, como:
 
 ✅ *Saída*  
 - Encerra o programa de forma limpa
+
+✅ *Permanência* **NOVO**
+
+- Salva seus dados como: Conta e Usuário (conta corrente)  **NOVO**
+- em breve será adicionado sistema de login com novas features. **NOVO**
 
 ---
 
