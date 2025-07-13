@@ -1,3 +1,4 @@
+import json
 clientes=[]
 contas= []
 
@@ -123,16 +124,102 @@ def obter_nome_cliente_para_despedida(cpf_digitado, clientes_existentes):
         return cliente_encontrado.nome 
     return "Visitante" 
 
+def salvar_dados(clientes, contas, nome_arquivo_clientes='clientes.json', nome_arquivo_contas='contas.json'):
+   
+    clientes_para_json = [] 
+    for cliente_obj in clientes: 
+        dados_cliente = { 
+            'nome': cliente_obj.nome,
+            'cpf': cliente_obj.cpf,
+            'endereco': cliente_obj.endereco,
+            'data_nascimento': cliente_obj.data_nascimento,
+        }
+        clientes_para_json.append(dados_cliente) 
+    
+    
+    try:
+        with open(nome_arquivo_clientes, 'w', encoding='utf-8') as f_clientes:
+            json.dump(clientes_para_json, f_clientes, indent=4) 
+        print(f"Dados de clientes salvos em '{nome_arquivo_clientes}'")
+    except Exception as e:
+        print(f"Erro ao tentar salvar clientes: {e}")
 
+    
+    contas_para_json = [] 
+    for conta_obj in contas:
+        dados_conta = { 
+            'numero': conta_obj.numero,
+            'agencia': conta_obj.agencia,
+            'cpf_cliente': conta_obj.cliente.cpf,
+            'saldo': conta_obj.saldo,
+            'historico': conta_obj.historico,
+            'limite': conta_obj.limite,
+            'limite_saques': conta_obj.limite_saques, 
+            'numero_saque': conta_obj.numero_saque,   
+        }
+        contas_para_json.append(dados_conta) 
+
+    
+    try:
+        with open(nome_arquivo_contas, 'w', encoding='utf-8') as f_contas:
+            json.dump(contas_para_json, f_contas, indent=4)
+        print(f"Dados de contas salvos em '{nome_arquivo_contas}'")
+    except Exception as e:
+        print(f"Erro ao tentar salvar contas: {e}")
+
+
+def carregar_dados(nome_arquivo_clientes='clientes.json', nome_arquivo_contas='contas.json'):
+    clientes_carregados=[]
+    try:
+        with open(nome_arquivo_clientes, 'r', encoding='utf-8') as f_clientes:
+            dados_json_cliente= json.load(f_clientes)
+            for dados_do_cliente_dict in dados_json_cliente:
+                novo_cliente= Cliente(
+                    nome= dados_do_cliente_dict['nome'],
+                    data_nascimento=dados_do_cliente_dict['data_nascimento'],
+                    cpf= dados_do_cliente_dict['cpf'],
+                    endereco= dados_do_cliente_dict['endereco'],
+                )
+                clientes_carregados.append(novo_cliente)
+    except FileNotFoundError:
+        print('arquivos de clientes não encontrados, iniciando arquivos vazios...')
+        return [], []
+    
+    contas_carregadas= []
+    try:
+        with open(nome_arquivo_contas, 'r', encoding='utf-8') as f_contas:
+            dados_json_conta= json.load(f_contas)
+            for dados_da_conta_dict in dados_json_conta:
+                cliente_correspondente= filtrar_usuario(dados_da_conta_dict['cpf_cliente'], clientes_carregados)
+                if cliente_correspondente:
+                    nova_conta= ContaCorrente(
+                    numero= dados_da_conta_dict['numero'],
+                    agencia= dados_da_conta_dict['agencia'],
+                    cliente= cliente_correspondente,
+                    saldo=dados_da_conta_dict.get('saldo', 0.0),
+                    historico= dados_da_conta_dict.get('historico', []),
+                    limite=dados_da_conta_dict.get('limite',0.0),
+                    limite_saques=dados_da_conta_dict.get('limite_saques', 3),
+                    numero_saques=dados_da_conta_dict.get('numero_saque', 0)
+                    )
+                    contas_carregadas.append(nova_conta)
+                else:
+                    print(f"Aviso: cliente com cpf {dados_da_conta_dict['cpf_cliente']} não encontrado para a conta {dados_da_conta_dict['numero']}. Conta não será carregada.")
+    except FileNotFoundError:
+        print("Nenhum dado de conta salvo encontrado. \niniciando com lista vazia de contas.")
+    except Exception as e:
+        print(f'erro inesperado ao carregar contas: {e}')
+        
+    return clientes_carregados, contas_carregadas
 
 menu= """
 Bem vindo ao banco!        
-
 [1] Depósito
 [2] Saques
 [3] Extrato
 [4] Criar Usuário
-[5] Sair
+[5] Criar Conta
+[6] Sair
 """   
      
 ultimo_cpf_interagido = None 
@@ -218,7 +305,8 @@ while True:
     elif opcao == "6": 
         nome_para_despedida = obter_nome_cliente_para_despedida(ultimo_cpf_interagido, clientes)
         print(f"Até logo, {nome_para_despedida}! Agradecemos por usar nosso sistema bancário. Saindo...")
-        break
         
+        salvar_dados(clientes,contas)
+        break      
     else:
         print("Operação inválida! Por favor, selecione uma opção válida.")
