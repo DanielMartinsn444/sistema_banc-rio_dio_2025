@@ -231,6 +231,10 @@ while True:
         cpf = input("Informe o CPF do cliente para depósito: ")
         
         cpf_limpo = ''.join(filter(str.isdigit, cpf))
+        if len(cpf_limpo) != 11:
+            print("Erro: O CPF deve conter 11 dígitos.")
+        else:
+            continue
         conta_alvo = encontrar_conta_por_cpf(cpf_limpo, contas) 
         
         if conta_alvo:
@@ -246,6 +250,8 @@ while True:
     elif opcao == "2": 
         cpf = input("Informe o CPF desejado para saque: ")
         cpf_limpo = ''.join(filter(str.isdigit, cpf))
+        if len(cpf_limpo) != 11:
+            print("Erro: O CPF deve conter 11 dígitos.")
         conta_alvo = encontrar_conta_por_cpf(cpf_limpo, contas)
         
         if conta_alvo:
@@ -261,6 +267,8 @@ while True:
     elif opcao == "3":
         cpf = input("Informe o CPF do cliente para extrato: ")
         cpf_limpo = ''.join(filter(str.isdigit, cpf))
+        if len(cpf_limpo) != 11:
+            print("Erro: O CPF deve conter 11 dígitos.")
         conta_alvo = encontrar_conta_por_cpf(cpf_limpo, contas)
         
         if conta_alvo: 
@@ -285,6 +293,8 @@ while True:
     elif opcao == "5": 
         cpf = input("Informe o CPF do cliente para criar uma nova conta: ")
         cpf_limpo = ''.join(filter(str.isdigit, cpf))
+        if len(cpf_limpo) != 11:
+            print("Erro: O CPF deve conter 11 dígitos.")
         cliente_para_conta = filtrar_usuario(cpf_limpo, clientes)
         
         if cliente_para_conta:
